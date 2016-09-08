@@ -1,0 +1,119 @@
+%{
+#include <iostream>
+#include <string>
+#include <cstdlib>
+#include <vector>
+#include "ast.hpp"
+
+#define YYDEBUG 1
+
+int yylex();
+void yyerror(std::string s) {
+	std::cerr << s << std::endl;
+	exit(EXIT_FAILURE);
+}
+%}
+
+%token def_token extern_token
+%token <str> id_token
+%token <num> num_token
+
+%left '+' '-'
+%left '*'
+
+%union {
+	ExprAST* expr;
+	std::vector<ExprAST*>* vec_exp;
+	double num;
+	std::string* str;
+	std::vector<std::string>* vec_str;
+	PrototypeAST* proto;
+}
+
+%type <expr> Expression
+%type <vec_exp> Expressions
+%type <vec_str> Arguments
+%type <proto> Signature
+
+%%
+/* Program is a list of commands */
+Program: Program ';' Command
+| Command
+;
+
+/* Program command */
+Command: def_token Signature Expression	 {
+	auto fun = new FunctionAST(*$2, $3);
+	std::cout << "def " << fun->src_show() << std::endl;
+	delete $3;
+} 
+| extern_token Signature {
+	std::cout << "extern " << $2->src_show() << std::endl;
+} 
+| Expression {
+	std::cout << $1->src_show() << std::endl;
+}
+;
+
+/* Function signature */
+Signature: id_token '(' Arguments ')' {
+	$$ = new PrototypeAST(*$1, *$3);
+	delete $1;
+	delete $3;
+}
+;
+
+/* Arguments for functions */
+Arguments: Arguments id_token {
+	$$ = $1;
+	$$->push_back(*$2);
+	delete $2;
+} 
+| {
+	$$ = new std::vector<std::string>();
+}
+;
+
+/* Building a single expression */
+Expression: Expression '+' Expression {
+	$$ = new BinaryExprAST('+', $1, $3);
+}
+| Expression '-' Expression {
+	$$ = new BinaryExprAST('-', $1, $3);
+} 
+| Expression '*' Expression {
+	$$ = new BinaryExprAST('*', $1, $3);
+} 
+| id_token {
+	$$ = new VariableExprAST(*$1);
+	delete $1;
+} 
+| id_token '(' Expressions ')' {
+	$$ = new CallExprAST(*$1, *$3);
+	delete $1;
+	delete $3;
+} 
+| num_token {
+	$$ = new NumberExprAST($1);
+}
+;
+
+/* Making a chain of expressions */
+Expressions: Expressions ',' Expression {
+	$$ = $1;
+	$$->push_back($3);
+} 
+| Expression {
+	$$ = new std::vector<ExprAST*>();
+	$$->push_back($1);
+} 
+| {
+	$$ = new std::vector<ExprAST*>();
+}
+;
+
+%%
+int main() {
+	yyparse();
+	return 0;
+}

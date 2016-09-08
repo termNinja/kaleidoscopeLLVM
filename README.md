@@ -19,6 +19,9 @@ Here's a list:
 * flex (my version: 2.6.1)
 * make (my version 4.2.1)
 
+`cd` into a directory you like and invoke `make`.
+You can then run `kaleidoscope` executable.
+
 ## Hint about learning LLVM IR
 You can easily get LLVM IR from a simple c program using clang compiler.
 For example, let's assume we wrote `main.c` that looks like:
@@ -32,7 +35,7 @@ int main() {
 ```
 
 We invoke the following:
-```
+```shell
 $ clang -emit-llvm main.c -c -S
 $ ls
 main.c main.ll
@@ -65,13 +68,14 @@ attributes #0 = { nounwind uwtable "disable-tail-calls"="false" "less-precise-fp
 !0 = !{!"clang version 3.8.1 (tags/RELEASE_381/final)"}
 ```
 
-Understanding LLVM IR before beginning to generate it from programs
-is a graceful path towards greatness.
-Not understanding LLVM IR is a gracefull path to drowning
-yourself in mud. Choose wisely! :D
+Understanding LLVM IR before beginning to generate it from programs is a graceful path towards greatness.
+
+Not understanding LLVM IR is a gracefull path to drowning yourself in mud. 
+
+Choose *wisely!* :D
 
 ## Contents
-* `00_plain` contains no LLVM, only Kaleidoscope language with parser and lexer;
+* `00_no_llvm` contains no LLVM, only Kaleidoscope language with parser and lexer;
 * `01_simple_ir_gen` contains LLVM for basic things without control flow;
 * `02_adding_jit` contains added interpretation for function calls;
 * `03_if_for` contains code with added support for *if-then-else* and *for* control flow;
@@ -149,3 +153,5 @@ fibi(10);
 Have fun.
 And LLVM is actually really cool and powerfull. I was honestly
 suprised at how easy it was to construct a compiler for an abstract language.
+
+Oh and I always indent using tabs for various reasons. Make sure to set tab size to 4!
