@@ -17,9 +17,13 @@ extern std::unique_ptr<Module> TheModule;
 extern std::unique_ptr<orc::KaleidoscopeJIT> TheJIT;
 extern std::map<std::string, PrototypeAST> FunctionProtos;
 
-/// putchard - putchar that takes a double and returns 0.
-extern "C" double putchard(double x) {
+extern "C" double printd(double x) {
 	std::cout << x << std::endl;
+	return 0;
+}
+
+extern "C" double putchard(double x) {
+	putchar((int)x);
 	return 0;
 }
 
