@@ -80,6 +80,7 @@ Choose *wisely!* :D
 * `02_adding_jit` contains added interpretation for function calls;
 * `03_if_for` contains code with added support for *if-then-else* and *for* control flow;
 * `04_var` contains support for *var-in* expression (assigning values to variables).
+* `05_while_loop` contains support for *while-do* loop.
 
 ## Sample programs
 Here you can find some programs you can try to test it.
@@ -133,7 +134,7 @@ var s in
 );
 ```
 
-##### Iterative fibonacci
+##### Iterative fibonacci (for)
 ```
 def fibi(n)
 var a = 1, b = 1, c = 1 in 
@@ -149,6 +150,24 @@ var a = 1, b = 1, c = 1 in
 
 fibi(10);
 ```
+
+##### Iterative fibonnaci (while)
+```
+def fibi(n)
+var a = 1, b = 1, c = 1 in
+(
+    while n > 2 do                                                                                                                                                        
+    (   
+        c = a + b:
+        a = b:
+        b = c:
+        n = n - 1 
+    ):   
+    c   
+);
+fibi(10);
+```
+
 ## Closing thoughts
 Have fun.
 And LLVM is actually really cool and powerfull. I was honestly

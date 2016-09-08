@@ -1,0 +1,11 @@
+# Numbers test
+2+3;
+
+# Variable test
+1+y;
+
+# Function definition test
+def f(x) x*x;
+
+# Extern function declaration test
+extern sin(x);
