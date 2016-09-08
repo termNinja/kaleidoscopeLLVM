@@ -1,0 +1,1024 @@
+Grammar
+
+    0 $accept: Program $end
+
+    1 Program: Program ';' Command
+    2        | Command
+
+    3 Command: def_token Signature Expression
+    4        | extern_token Signature
+    5        | Expression
+    6        | end_token
+
+    7 Signature: id_token '(' Arguments ')'
+
+    8 Arguments: Arguments id_token
+    9          | %empty
+
+   10 Expression: Expression '+' Expression
+   11           | Expression '-' Expression
+   12           | Expression '*' Expression
+   13           | Expression '>' Expression
+   14           | Expression '<' Expression
+   15           | Expression ':' Expression
+   16           | id_token '=' Expression
+   17           | '(' Expression ')'
+   18           | if_token Expression then_token Expression else_token Expression
+   19           | for_token id_token '=' Expression ',' Expression ForStep in_token Expression
+   20           | var_token VarAssignments in_token Expression
+   21           | id_token
+   22           | id_token '(' Expressions ')'
+   23           | num_token
+
+   24 VarAssignments: VarAssignments ',' VarAssignment
+   25               | VarAssignment
+
+   26 VarAssignment: id_token '=' Expression
+   27              | id_token
+
+   28 ForStep: ',' Expression
+   29        | %empty
+
+   30 Expressions: Expressions ',' Expression
+   31            | Expression
+   32            | %empty
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+'(' (40) 7 17 22
+')' (41) 7 17 22
+'*' (42) 12
+'+' (43) 10
+',' (44) 19 24 28 30
+'-' (45) 11
+':' (58) 15
+';' (59) 1
+'<' (60) 14
+'=' (61) 16 19 26
+'>' (62) 13
+error (256)
+def_token (258) 3
+extern_token (259) 4
+end_token (260) 6
+if_token (261) 18
+then_token (262) 18
+else_token (263) 18
+for_token (264) 19
+in_token (265) 19 20
+var_token (266) 20
+id_token (267) 7 8 16 19 21 22 26 27
+num_token (268) 23
+
+
+Nonterminals, with rules where they appear
+
+$accept (25)
+    on left: 0
+Program (26)
+    on left: 1 2, on right: 0 1
+Command (27)
+    on left: 3 4 5 6, on right: 1 2
+Signature (28)
+    on left: 7, on right: 3 4
+Arguments (29)
+    on left: 8 9, on right: 7 8
+Expression (30)
+    on left: 10 11 12 13 14 15 16 17 18 19 20 21 22 23, on right: 3
+    5 10 11 12 13 14 15 16 17 18 19 20 26 28 30 31
+VarAssignments (31)
+    on left: 24 25, on right: 20 24
+VarAssignment (32)
+    on left: 26 27, on right: 24 25
+ForStep (33)
+    on left: 28 29, on right: 19
+Expressions (34)
+    on left: 30 31 32, on right: 22 30
+
+
+State 0
+
+    0 $accept: . Program $end
+
+    def_token     shift, and go to state 1
+    extern_token  shift, and go to state 2
+    end_token     shift, and go to state 3
+    if_token      shift, and go to state 4
+    for_token     shift, and go to state 5
+    var_token     shift, and go to state 6
+    id_token      shift, and go to state 7
+    num_token     shift, and go to state 8
+    '('           shift, and go to state 9
+
+    Program     go to state 10
+    Command     go to state 11
+    Expression  go to state 12
+
+
+State 1
+
+    3 Command: def_token . Signature Expression
+
+    id_token  shift, and go to state 13
+
+    Signature  go to state 14
+
+
+State 2
+
+    4 Command: extern_token . Signature
+
+    id_token  shift, and go to state 13
+
+    Signature  go to state 15
+
+
+State 3
+
+    6 Command: end_token .
+
+    $default  reduce using rule 6 (Command)
+
+
+State 4
+
+   18 Expression: if_token . Expression then_token Expression else_token Expression
+
+    if_token   shift, and go to state 4
+    for_token  shift, and go to state 5
+    var_token  shift, and go to state 6
+    id_token   shift, and go to state 7
+    num_token  shift, and go to state 8
+    '('        shift, and go to state 9
+
+    Expression  go to state 16
+
+
+State 5
+
+   19 Expression: for_token . id_token '=' Expression ',' Expression ForStep in_token Expression
+
+    id_token  shift, and go to state 17
+
+
+State 6
+
+   20 Expression: var_token . VarAssignments in_token Expression
+
+    id_token  shift, and go to state 18
+
+    VarAssignments  go to state 19
+    VarAssignment   go to state 20
+
+
+State 7
+
+   16 Expression: id_token . '=' Expression
+   21           | id_token .
+   22           | id_token . '(' Expressions ')'
+
+    '='  shift, and go to state 21
+    '('  shift, and go to state 22
+
+    $default  reduce using rule 21 (Expression)
+
+
+State 8
+
+   23 Expression: num_token .
+
+    $default  reduce using rule 23 (Expression)
+
+
+State 9
+
+   17 Expression: '(' . Expression ')'
+
+    if_token   shift, and go to state 4
+    for_token  shift, and go to state 5
+    var_token  shift, and go to state 6
+    id_token   shift, and go to state 7
+    num_token  shift, and go to state 8
+    '('        shift, and go to state 9
+
+    Expression  go to state 23
+
+
+State 10
+
+    0 $accept: Program . $end
+    1 Program: Program . ';' Command
+
+    $end  shift, and go to state 24
+    ';'   shift, and go to state 25
+
+
+State 11
+
+    2 Program: Command .
+
+    $default  reduce using rule 2 (Program)
+
+
+State 12
+
+    5 Command: Expression .
+   10 Expression: Expression . '+' Expression
+   11           | Expression . '-' Expression
+   12           | Expression . '*' Expression
+   13           | Expression . '>' Expression
+   14           | Expression . '<' Expression
+   15           | Expression . ':' Expression
+
+    ':'  shift, and go to state 26
+    '<'  shift, and go to state 27
+    '>'  shift, and go to state 28
+    '+'  shift, and go to state 29
+    '-'  shift, and go to state 30
+    '*'  shift, and go to state 31
+
+    $default  reduce using rule 5 (Command)
+
+
+State 13
+
+    7 Signature: id_token . '(' Arguments ')'
+
+    '('  shift, and go to state 32
+
+
+State 14
+
+    3 Command: def_token Signature . Expression
+
+    if_token   shift, and go to state 4
+    for_token  shift, and go to state 5
+    var_token  shift, and go to state 6
+    id_token   shift, and go to state 7
+    num_token  shift, and go to state 8
+    '('        shift, and go to state 9
+
+    Expression  go to state 33
+
+
+State 15
+
+    4 Command: extern_token Signature .
+
+    $default  reduce using rule 4 (Command)
+
+
+State 16
+
+   10 Expression: Expression . '+' Expression
+   11           | Expression . '-' Expression
+   12           | Expression . '*' Expression
+   13           | Expression . '>' Expression
+   14           | Expression . '<' Expression
+   15           | Expression . ':' Expression
+   18           | if_token Expression . then_token Expression else_token Expression
+
+    then_token  shift, and go to state 34
+    ':'         shift, and go to state 26
+    '<'         shift, and go to state 27
+    '>'         shift, and go to state 28
+    '+'         shift, and go to state 29
+    '-'         shift, and go to state 30
+    '*'         shift, and go to state 31
+
+
+State 17
+
+   19 Expression: for_token id_token . '=' Expression ',' Expression ForStep in_token Expression
+
+    '='  shift, and go to state 35
+
+
+State 18
+
+   26 VarAssignment: id_token . '=' Expression
+   27              | id_token .
+
+    '='  shift, and go to state 36
+
+    $default  reduce using rule 27 (VarAssignment)
+
+
+State 19
+
+   20 Expression: var_token VarAssignments . in_token Expression
+   24 VarAssignments: VarAssignments . ',' VarAssignment
+
+    in_token  shift, and go to state 37
+    ','       shift, and go to state 38
+
+
+State 20
+
+   25 VarAssignments: VarAssignment .
+
+    $default  reduce using rule 25 (VarAssignments)
+
+
+State 21
+
+   16 Expression: id_token '=' . Expression
+
+    if_token   shift, and go to state 4
+    for_token  shift, and go to state 5
+    var_token  shift, and go to state 6
+    id_token   shift, and go to state 7
+    num_token  shift, and go to state 8
+    '('        shift, and go to state 9
+
+    Expression  go to state 39
+
+
+State 22
+
+   22 Expression: id_token '(' . Expressions ')'
+
+    if_token   shift, and go to state 4
+    for_token  shift, and go to state 5
+    var_token  shift, and go to state 6
+    id_token   shift, and go to state 7
+    num_token  shift, and go to state 8
+    '('        shift, and go to state 9
+
+    $default  reduce using rule 32 (Expressions)
+
+    Expression   go to state 40
+    Expressions  go to state 41
+
+
+State 23
+
+   10 Expression: Expression . '+' Expression
+   11           | Expression . '-' Expression
+   12           | Expression . '*' Expression
+   13           | Expression . '>' Expression
+   14           | Expression . '<' Expression
+   15           | Expression . ':' Expression
+   17           | '(' Expression . ')'
+
+    ':'  shift, and go to state 26
+    '<'  shift, and go to state 27
+    '>'  shift, and go to state 28
+    '+'  shift, and go to state 29
+    '-'  shift, and go to state 30
+    '*'  shift, and go to state 31
+    ')'  shift, and go to state 42
+
+
+State 24
+
+    0 $accept: Program $end .
+
+    $default  accept
+
+
+State 25
+
+    1 Program: Program ';' . Command
+
+    def_token     shift, and go to state 1
+    extern_token  shift, and go to state 2
+    end_token     shift, and go to state 3
+    if_token      shift, and go to state 4
+    for_token     shift, and go to state 5
+    var_token     shift, and go to state 6
+    id_token      shift, and go to state 7
+    num_token     shift, and go to state 8
+    '('           shift, and go to state 9
+
+    Command     go to state 43
+    Expression  go to state 12
+
+
+State 26
+
+   15 Expression: Expression ':' . Expression
+
+    if_token   shift, and go to state 4
+    for_token  shift, and go to state 5
+    var_token  shift, and go to state 6
+    id_token   shift, and go to state 7
+    num_token  shift, and go to state 8
+    '('        shift, and go to state 9
+
+    Expression  go to state 44
+
+
+State 27
+
+   14 Expression: Expression '<' . Expression
+
+    if_token   shift, and go to state 4
+    for_token  shift, and go to state 5
+    var_token  shift, and go to state 6
+    id_token   shift, and go to state 7
+    num_token  shift, and go to state 8
+    '('        shift, and go to state 9
+
+    Expression  go to state 45
+
+
+State 28
+
+   13 Expression: Expression '>' . Expression
+
+    if_token   shift, and go to state 4
+    for_token  shift, and go to state 5
+    var_token  shift, and go to state 6
+    id_token   shift, and go to state 7
+    num_token  shift, and go to state 8
+    '('        shift, and go to state 9
+
+    Expression  go to state 46
+
+
+State 29
+
+   10 Expression: Expression '+' . Expression
+
+    if_token   shift, and go to state 4
+    for_token  shift, and go to state 5
+    var_token  shift, and go to state 6
+    id_token   shift, and go to state 7
+    num_token  shift, and go to state 8
+    '('        shift, and go to state 9
+
+    Expression  go to state 47
+
+
+State 30
+
+   11 Expression: Expression '-' . Expression
+
+    if_token   shift, and go to state 4
+    for_token  shift, and go to state 5
+    var_token  shift, and go to state 6
+    id_token   shift, and go to state 7
+    num_token  shift, and go to state 8
+    '('        shift, and go to state 9
+
+    Expression  go to state 48
+
+
+State 31
+
+   12 Expression: Expression '*' . Expression
+
+    if_token   shift, and go to state 4
+    for_token  shift, and go to state 5
+    var_token  shift, and go to state 6
+    id_token   shift, and go to state 7
+    num_token  shift, and go to state 8
+    '('        shift, and go to state 9
+
+    Expression  go to state 49
+
+
+State 32
+
+    7 Signature: id_token '(' . Arguments ')'
+
+    $default  reduce using rule 9 (Arguments)
+
+    Arguments  go to state 50
+
+
+State 33
+
+    3 Command: def_token Signature Expression .
+   10 Expression: Expression . '+' Expression
+   11           | Expression . '-' Expression
+   12           | Expression . '*' Expression
+   13           | Expression . '>' Expression
+   14           | Expression . '<' Expression
+   15           | Expression . ':' Expression
+
+    ':'  shift, and go to state 26
+    '<'  shift, and go to state 27
+    '>'  shift, and go to state 28
+    '+'  shift, and go to state 29
+    '-'  shift, and go to state 30
+    '*'  shift, and go to state 31
+
+    $default  reduce using rule 3 (Command)
+
+
+State 34
+
+   18 Expression: if_token Expression then_token . Expression else_token Expression
+
+    if_token   shift, and go to state 4
+    for_token  shift, and go to state 5
+    var_token  shift, and go to state 6
+    id_token   shift, and go to state 7
+    num_token  shift, and go to state 8
+    '('        shift, and go to state 9
+
+    Expression  go to state 51
+
+
+State 35
+
+   19 Expression: for_token id_token '=' . Expression ',' Expression ForStep in_token Expression
+
+    if_token   shift, and go to state 4
+    for_token  shift, and go to state 5
+    var_token  shift, and go to state 6
+    id_token   shift, and go to state 7
+    num_token  shift, and go to state 8
+    '('        shift, and go to state 9
+
+    Expression  go to state 52
+
+
+State 36
+
+   26 VarAssignment: id_token '=' . Expression
+
+    if_token   shift, and go to state 4
+    for_token  shift, and go to state 5
+    var_token  shift, and go to state 6
+    id_token   shift, and go to state 7
+    num_token  shift, and go to state 8
+    '('        shift, and go to state 9
+
+    Expression  go to state 53
+
+
+State 37
+
+   20 Expression: var_token VarAssignments in_token . Expression
+
+    if_token   shift, and go to state 4
+    for_token  shift, and go to state 5
+    var_token  shift, and go to state 6
+    id_token   shift, and go to state 7
+    num_token  shift, and go to state 8
+    '('        shift, and go to state 9
+
+    Expression  go to state 54
+
+
+State 38
+
+   24 VarAssignments: VarAssignments ',' . VarAssignment
+
+    id_token  shift, and go to state 18
+
+    VarAssignment  go to state 55
+
+
+State 39
+
+   10 Expression: Expression . '+' Expression
+   11           | Expression . '-' Expression
+   12           | Expression . '*' Expression
+   13           | Expression . '>' Expression
+   14           | Expression . '<' Expression
+   15           | Expression . ':' Expression
+   16           | id_token '=' Expression .
+
+    '<'  shift, and go to state 27
+    '>'  shift, and go to state 28
+    '+'  shift, and go to state 29
+    '-'  shift, and go to state 30
+    '*'  shift, and go to state 31
+
+    $default  reduce using rule 16 (Expression)
+
+
+State 40
+
+   10 Expression: Expression . '+' Expression
+   11           | Expression . '-' Expression
+   12           | Expression . '*' Expression
+   13           | Expression . '>' Expression
+   14           | Expression . '<' Expression
+   15           | Expression . ':' Expression
+   31 Expressions: Expression .
+
+    ':'  shift, and go to state 26
+    '<'  shift, and go to state 27
+    '>'  shift, and go to state 28
+    '+'  shift, and go to state 29
+    '-'  shift, and go to state 30
+    '*'  shift, and go to state 31
+
+    $default  reduce using rule 31 (Expressions)
+
+
+State 41
+
+   22 Expression: id_token '(' Expressions . ')'
+   30 Expressions: Expressions . ',' Expression
+
+    ')'  shift, and go to state 56
+    ','  shift, and go to state 57
+
+
+State 42
+
+   17 Expression: '(' Expression ')' .
+
+    $default  reduce using rule 17 (Expression)
+
+
+State 43
+
+    1 Program: Program ';' Command .
+
+    $default  reduce using rule 1 (Program)
+
+
+State 44
+
+   10 Expression: Expression . '+' Expression
+   11           | Expression . '-' Expression
+   12           | Expression . '*' Expression
+   13           | Expression . '>' Expression
+   14           | Expression . '<' Expression
+   15           | Expression . ':' Expression
+   15           | Expression ':' Expression .
+
+    '<'  shift, and go to state 27
+    '>'  shift, and go to state 28
+    '+'  shift, and go to state 29
+    '-'  shift, and go to state 30
+    '*'  shift, and go to state 31
+
+    $default  reduce using rule 15 (Expression)
+
+
+State 45
+
+   10 Expression: Expression . '+' Expression
+   11           | Expression . '-' Expression
+   12           | Expression . '*' Expression
+   13           | Expression . '>' Expression
+   14           | Expression . '<' Expression
+   14           | Expression '<' Expression .
+   15           | Expression . ':' Expression
+
+    '+'  shift, and go to state 29
+    '-'  shift, and go to state 30
+    '*'  shift, and go to state 31
+
+    $default  reduce using rule 14 (Expression)
+
+
+State 46
+
+   10 Expression: Expression . '+' Expression
+   11           | Expression . '-' Expression
+   12           | Expression . '*' Expression
+   13           | Expression . '>' Expression
+   13           | Expression '>' Expression .
+   14           | Expression . '<' Expression
+   15           | Expression . ':' Expression
+
+    '+'  shift, and go to state 29
+    '-'  shift, and go to state 30
+    '*'  shift, and go to state 31
+
+    $default  reduce using rule 13 (Expression)
+
+
+State 47
+
+   10 Expression: Expression . '+' Expression
+   10           | Expression '+' Expression .
+   11           | Expression . '-' Expression
+   12           | Expression . '*' Expression
+   13           | Expression . '>' Expression
+   14           | Expression . '<' Expression
+   15           | Expression . ':' Expression
+
+    '*'  shift, and go to state 31
+
+    $default  reduce using rule 10 (Expression)
+
+
+State 48
+
+   10 Expression: Expression . '+' Expression
+   11           | Expression . '-' Expression
+   11           | Expression '-' Expression .
+   12           | Expression . '*' Expression
+   13           | Expression . '>' Expression
+   14           | Expression . '<' Expression
+   15           | Expression . ':' Expression
+
+    '*'  shift, and go to state 31
+
+    $default  reduce using rule 11 (Expression)
+
+
+State 49
+
+   10 Expression: Expression . '+' Expression
+   11           | Expression . '-' Expression
+   12           | Expression . '*' Expression
+   12           | Expression '*' Expression .
+   13           | Expression . '>' Expression
+   14           | Expression . '<' Expression
+   15           | Expression . ':' Expression
+
+    $default  reduce using rule 12 (Expression)
+
+
+State 50
+
+    7 Signature: id_token '(' Arguments . ')'
+    8 Arguments: Arguments . id_token
+
+    id_token  shift, and go to state 58
+    ')'       shift, and go to state 59
+
+
+State 51
+
+   10 Expression: Expression . '+' Expression
+   11           | Expression . '-' Expression
+   12           | Expression . '*' Expression
+   13           | Expression . '>' Expression
+   14           | Expression . '<' Expression
+   15           | Expression . ':' Expression
+   18           | if_token Expression then_token Expression . else_token Expression
+
+    else_token  shift, and go to state 60
+    ':'         shift, and go to state 26
+    '<'         shift, and go to state 27
+    '>'         shift, and go to state 28
+    '+'         shift, and go to state 29
+    '-'         shift, and go to state 30
+    '*'         shift, and go to state 31
+
+
+State 52
+
+   10 Expression: Expression . '+' Expression
+   11           | Expression . '-' Expression
+   12           | Expression . '*' Expression
+   13           | Expression . '>' Expression
+   14           | Expression . '<' Expression
+   15           | Expression . ':' Expression
+   19           | for_token id_token '=' Expression . ',' Expression ForStep in_token Expression
+
+    ':'  shift, and go to state 26
+    '<'  shift, and go to state 27
+    '>'  shift, and go to state 28
+    '+'  shift, and go to state 29
+    '-'  shift, and go to state 30
+    '*'  shift, and go to state 31
+    ','  shift, and go to state 61
+
+
+State 53
+
+   10 Expression: Expression . '+' Expression
+   11           | Expression . '-' Expression
+   12           | Expression . '*' Expression
+   13           | Expression . '>' Expression
+   14           | Expression . '<' Expression
+   15           | Expression . ':' Expression
+   26 VarAssignment: id_token '=' Expression .
+
+    ':'  shift, and go to state 26
+    '<'  shift, and go to state 27
+    '>'  shift, and go to state 28
+    '+'  shift, and go to state 29
+    '-'  shift, and go to state 30
+    '*'  shift, and go to state 31
+
+    $default  reduce using rule 26 (VarAssignment)
+
+
+State 54
+
+   10 Expression: Expression . '+' Expression
+   11           | Expression . '-' Expression
+   12           | Expression . '*' Expression
+   13           | Expression . '>' Expression
+   14           | Expression . '<' Expression
+   15           | Expression . ':' Expression
+   20           | var_token VarAssignments in_token Expression .
+
+    '<'  shift, and go to state 27
+    '>'  shift, and go to state 28
+    '+'  shift, and go to state 29
+    '-'  shift, and go to state 30
+    '*'  shift, and go to state 31
+
+    $default  reduce using rule 20 (Expression)
+
+
+State 55
+
+   24 VarAssignments: VarAssignments ',' VarAssignment .
+
+    $default  reduce using rule 24 (VarAssignments)
+
+
+State 56
+
+   22 Expression: id_token '(' Expressions ')' .
+
+    $default  reduce using rule 22 (Expression)
+
+
+State 57
+
+   30 Expressions: Expressions ',' . Expression
+
+    if_token   shift, and go to state 4
+    for_token  shift, and go to state 5
+    var_token  shift, and go to state 6
+    id_token   shift, and go to state 7
+    num_token  shift, and go to state 8
+    '('        shift, and go to state 9
+
+    Expression  go to state 62
+
+
+State 58
+
+    8 Arguments: Arguments id_token .
+
+    $default  reduce using rule 8 (Arguments)
+
+
+State 59
+
+    7 Signature: id_token '(' Arguments ')' .
+
+    $default  reduce using rule 7 (Signature)
+
+
+State 60
+
+   18 Expression: if_token Expression then_token Expression else_token . Expression
+
+    if_token   shift, and go to state 4
+    for_token  shift, and go to state 5
+    var_token  shift, and go to state 6
+    id_token   shift, and go to state 7
+    num_token  shift, and go to state 8
+    '('        shift, and go to state 9
+
+    Expression  go to state 63
+
+
+State 61
+
+   19 Expression: for_token id_token '=' Expression ',' . Expression ForStep in_token Expression
+
+    if_token   shift, and go to state 4
+    for_token  shift, and go to state 5
+    var_token  shift, and go to state 6
+    id_token   shift, and go to state 7
+    num_token  shift, and go to state 8
+    '('        shift, and go to state 9
+
+    Expression  go to state 64
+
+
+State 62
+
+   10 Expression: Expression . '+' Expression
+   11           | Expression . '-' Expression
+   12           | Expression . '*' Expression
+   13           | Expression . '>' Expression
+   14           | Expression . '<' Expression
+   15           | Expression . ':' Expression
+   30 Expressions: Expressions ',' Expression .
+
+    ':'  shift, and go to state 26
+    '<'  shift, and go to state 27
+    '>'  shift, and go to state 28
+    '+'  shift, and go to state 29
+    '-'  shift, and go to state 30
+    '*'  shift, and go to state 31
+
+    $default  reduce using rule 30 (Expressions)
+
+
+State 63
+
+   10 Expression: Expression . '+' Expression
+   11           | Expression . '-' Expression
+   12           | Expression . '*' Expression
+   13           | Expression . '>' Expression
+   14           | Expression . '<' Expression
+   15           | Expression . ':' Expression
+   18           | if_token Expression then_token Expression else_token Expression .
+
+    '<'  shift, and go to state 27
+    '>'  shift, and go to state 28
+    '+'  shift, and go to state 29
+    '-'  shift, and go to state 30
+    '*'  shift, and go to state 31
+
+    $default  reduce using rule 18 (Expression)
+
+
+State 64
+
+   10 Expression: Expression . '+' Expression
+   11           | Expression . '-' Expression
+   12           | Expression . '*' Expression
+   13           | Expression . '>' Expression
+   14           | Expression . '<' Expression
+   15           | Expression . ':' Expression
+   19           | for_token id_token '=' Expression ',' Expression . ForStep in_token Expression
+
+    ':'  shift, and go to state 26
+    '<'  shift, and go to state 27
+    '>'  shift, and go to state 28
+    '+'  shift, and go to state 29
+    '-'  shift, and go to state 30
+    '*'  shift, and go to state 31
+    ','  shift, and go to state 65
+
+    $default  reduce using rule 29 (ForStep)
+
+    ForStep  go to state 66
+
+
+State 65
+
+   28 ForStep: ',' . Expression
+
+    if_token   shift, and go to state 4
+    for_token  shift, and go to state 5
+    var_token  shift, and go to state 6
+    id_token   shift, and go to state 7
+    num_token  shift, and go to state 8
+    '('        shift, and go to state 9
+
+    Expression  go to state 67
+
+
+State 66
+
+   19 Expression: for_token id_token '=' Expression ',' Expression ForStep . in_token Expression
+
+    in_token  shift, and go to state 68
+
+
+State 67
+
+   10 Expression: Expression . '+' Expression
+   11           | Expression . '-' Expression
+   12           | Expression . '*' Expression
+   13           | Expression . '>' Expression
+   14           | Expression . '<' Expression
+   15           | Expression . ':' Expression
+   28 ForStep: ',' Expression .
+
+    ':'  shift, and go to state 26
+    '<'  shift, and go to state 27
+    '>'  shift, and go to state 28
+    '+'  shift, and go to state 29
+    '-'  shift, and go to state 30
+    '*'  shift, and go to state 31
+
+    $default  reduce using rule 28 (ForStep)
+
+
+State 68
+
+   19 Expression: for_token id_token '=' Expression ',' Expression ForStep in_token . Expression
+
+    if_token   shift, and go to state 4
+    for_token  shift, and go to state 5
+    var_token  shift, and go to state 6
+    id_token   shift, and go to state 7
+    num_token  shift, and go to state 8
+    '('        shift, and go to state 9
+
+    Expression  go to state 69
+
+
+State 69
+
+   10 Expression: Expression . '+' Expression
+   11           | Expression . '-' Expression
+   12           | Expression . '*' Expression
+   13           | Expression . '>' Expression
+   14           | Expression . '<' Expression
+   15           | Expression . ':' Expression
+   19           | for_token id_token '=' Expression ',' Expression ForStep in_token Expression .
+
+    '<'  shift, and go to state 27
+    '>'  shift, and go to state 28
+    '+'  shift, and go to state 29
+    '-'  shift, and go to state 30
+    '*'  shift, and go to state 31
+
+    $default  reduce using rule 19 (Expression)
