@@ -11,7 +11,17 @@ That doesn't mean that you need to learn it whole, but you should at least under
 * `store`
 * `ret`
 
-## Building it up
+## Contents
+* `xtra_exploring_llvm_ir` contains some examples with llvm ir and control flow graphs;
+* `00_no_llvm` contains no LLVM, only Kaleidoscope language with parser and lexer;
+* `01_simple_ir_gen` contains LLVM for basic things without control flow;
+* `02_adding_jit` contains added interpretation for function calls;
+* `03_if_for` contains code with added support for *if-then-else* and *for* control flow;
+* `04_var` contains support for *var-in* expression (assigning values to variables).
+* `05_while_loop` contains support for *while-do* loop.
+
+
+## Building Kaleidoscope
 Here's a list:
 * LLVM version 3.6 at least (my version: 3.8.1)
 * clang++ compiler (which you get from LLVM)
@@ -73,14 +83,6 @@ Understanding LLVM IR before beginning to generate it from programs is a gracefu
 Not understanding LLVM IR is a gracefull path to drowning yourself in mud. 
 
 Choose *wisely!* :D
-
-## Contents
-* `00_no_llvm` contains no LLVM, only Kaleidoscope language with parser and lexer;
-* `01_simple_ir_gen` contains LLVM for basic things without control flow;
-* `02_adding_jit` contains added interpretation for function calls;
-* `03_if_for` contains code with added support for *if-then-else* and *for* control flow;
-* `04_var` contains support for *var-in* expression (assigning values to variables).
-* `05_while_loop` contains support for *while-do* loop.
 
 ## Sample programs
 Here you can find some programs you can try to test it.
